@@ -1,6 +1,7 @@
 import React from 'react';
 import Songs from './Songs';
 import axios from 'axios';
+import SongSelectorContainer from '../containers/SongSelectorContainer';
 
 export default class Playlist extends React.Component {
 	constructor(props) {
@@ -31,6 +32,7 @@ export default class Playlist extends React.Component {
 	  <Songs songs={playlist.songs} /> {/** Hooray for reusability! */}
 	  { playlist.songs && !playlist.songs.length && <small>No songs.</small> }
 	  <hr />
+	<SongSelectorContainer playlistId={playlist.id} addToPlaylist={this.props.addToPlaylist}/>
 	</div>
 	}
 }

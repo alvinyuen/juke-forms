@@ -23,6 +23,7 @@ export default class AppContainer extends Component {
     this.prev = this.prev.bind(this);
     this.selectAlbum = this.selectAlbum.bind(this);
     this.selectArtist = this.selectArtist.bind(this);
+    this.addToPlaylist = this.addToPlaylist.bind(this);
   }
 
   componentDidMount () {
@@ -40,6 +41,11 @@ export default class AppContainer extends Component {
       this.next());
     AUDIO.addEventListener('timeupdate', () =>
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
+  }
+
+  addToPlaylist(playlistId, songId) {
+    console.log("PAAMBOS: ", playlistId, songId)
+    axios.post(`/api/playlists/${playlistId}/songs`, {id: songId})
   }
 
   onLoad (albums, artists, playlists) {
@@ -126,14 +132,6 @@ export default class AppContainer extends Component {
       .then(data => this.onLoadArtist(...data));
   }
 
-  selectPlaylist (playlistId) {
-      axios.get(`/api/playlists/${playlistId}`)
-      .then(res => res.data)
-      .then(playlist => this.setState({
-        selectedPlaylist: playlist
-      }), console.log(this.state.selectedPlaylist));
-  }
-
   onLoadArtist (artist, albums, songs) {
     songs = songs.map(convertSong);
     albums = convertAlbums(albums);
@@ -150,7 +148,8 @@ export default class AppContainer extends Component {
       toggle: this.toggle,
       selectAlbum: this.selectAlbum,
       selectArtist: this.selectArtist,
-      postPlaylist: this.postPlaylist
+      postPlaylist: this.postPlaylist,
+      addToPlaylist: this.addToPlaylist
     });
 
     return (

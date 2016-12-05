@@ -26,7 +26,6 @@ export default class NewPlayListContainer extends Component {
 
 
     handleInput(event){
-        console.log('playlist name:', event.target.value);
         if(!event.target.value.length && this.state.edited){
             this.setState({nameWarning: true,
                         disabled:true});
@@ -52,7 +51,6 @@ export default class NewPlayListContainer extends Component {
 
     onSubmit(event){
         event.preventDefault();
-        console.log('value of the form:', this.state.input);
         this.props.postPlaylist(this.state.input);
         this.setState({input: ""});
         this.setState({edited: false});
