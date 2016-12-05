@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-const Sidebar = (props) => {
+const Sidebar = ({playlists}) => {
 
   return (
     <sidebar>
@@ -23,6 +23,15 @@ const Sidebar = (props) => {
         <Link className="btn btn-primary btn-block" to={"/newplaylist"}>
           <span className="glyphicon glyphicon-plus"></span> PLAYLIST
         </Link>
+        <hr />
+          <ul className="list-unstyled">
+            {playlists.map(function(playlist){
+              return <li className="playlist-item menu-item" key={playlist.id}>
+              <Link to={`/playlists/${playlist.id}`}>{playlist.name}</Link>
+            </li>
+            })}
+          </ul>
+        <hr />
       </h4>
     </section>
     </sidebar>

@@ -16,7 +16,7 @@ export default class AppContainer extends Component {
   constructor (props) {
     super(props);
     this.state = initialState;
-
+    this.postPlaylist = this.postPlaylist.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleOne = this.toggleOne.bind(this);
     this.next = this.next.bind(this);
@@ -30,7 +30,8 @@ export default class AppContainer extends Component {
     Promise
       .all([
         axios.get('/api/albums/'),
-        axios.get('/api/artists/')
+        axios.get('/api/artists/'),
+        axios.get('/api/playlists/')
       ])
       .then(res => res.map(r => r.data))
       .then(data => this.onLoad(...data));
@@ -41,10 +42,11 @@ export default class AppContainer extends Component {
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
   }
 
-  onLoad (albums, artists) {
+  onLoad (albums, artists, playlists) {
     this.setState({
       albums: convertAlbums(albums),
-      artists: artists
+      artists: artists,
+      playlists: playlists
     });
   }
 
@@ -57,6 +59,15 @@ export default class AppContainer extends Component {
     AUDIO.pause();
     this.setState({ isPlaying: false });
   }
+
+  postPlaylist(input) {
+        axios.post('/api/playlists', {name: input})
+            .then(res => res.data)
+            .then(result => {
+                let newArray = [...this.state.playlists, result];
+                this.setState({playlists:newArray});
+            })
+    }
 
   load (currentSong, currentSongList) {
     AUDIO.src = currentSong.audioUrl;
@@ -115,6 +126,14 @@ export default class AppContainer extends Component {
       .then(data => this.onLoadArtist(...data));
   }
 
+  selectPlaylist (playlistId) {
+      axios.get(`/api/playlists/${playlistId}`)
+      .then(res => res.data)
+      .then(playlist => this.setState({
+        selectedPlaylist: playlist
+      }), console.log(this.state.selectedPlaylist));
+  }
+
   onLoadArtist (artist, albums, songs) {
     songs = songs.map(convertSong);
     albums = convertAlbums(albums);
@@ -130,13 +149,14 @@ export default class AppContainer extends Component {
       toggleOne: this.toggleOne,
       toggle: this.toggle,
       selectAlbum: this.selectAlbum,
-      selectArtist: this.selectArtist
+      selectArtist: this.selectArtist,
+      postPlaylist: this.postPlaylist
     });
 
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
-          <Sidebar />
+          <Sidebar playlists={this.state.playlists} />
         </div>
         <div className="col-xs-10">
         {

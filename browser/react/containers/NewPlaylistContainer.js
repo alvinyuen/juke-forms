@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import axios from 'axios';
 import NewPlayList from '../components/NewPlayList';
 
 
@@ -43,9 +43,12 @@ export default class NewPlayListContainer extends Component {
         this.setState({edited: true});
     }
 
+    
+
     onSubmit(event){
         event.preventDefault();
         console.log('value of the form:', this.state.input);
+        this.props.postPlaylist(this.state.input);
         this.setState({input: ""});
         this.setState({edited: false});
     }
