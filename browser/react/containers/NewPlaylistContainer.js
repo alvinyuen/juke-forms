@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import NewPlayList from '../components/NewPlayList';
+import {browserHistory} from 'react-router';
 
 
 
@@ -14,8 +15,11 @@ export default class NewPlayListContainer extends Component {
             input: '',
             disabled: true,
             nameWarning: false,
-            lengthWarning: false
+            lengthWarning: false,
+
         }
+
+
         this.handleInput = this.handleInput.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -43,7 +47,8 @@ export default class NewPlayListContainer extends Component {
         this.setState({edited: true});
     }
 
-    
+
+
 
     onSubmit(event){
         event.preventDefault();
@@ -51,10 +56,13 @@ export default class NewPlayListContainer extends Component {
         this.props.postPlaylist(this.state.input);
         this.setState({input: ""});
         this.setState({edited: false});
+
+        this.context.router.push(`/playlists/${this.props.playlists.length+1}`)
+
     }
 
     render(){
-
+         console.log('ROUTER:', this.context);
 
         return(
             <div>
@@ -70,5 +78,11 @@ export default class NewPlayListContainer extends Component {
         );
 
     }
+
+}
+
+NewPlayListContainer.contextTypes = {
+
+    router:React.PropTypes.object
 
 }

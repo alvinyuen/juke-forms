@@ -10,8 +10,8 @@ export default class Playlist extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps() {
-		this.selectPlaylist(this.props.routeParams.playlistId)
+	componentWillReceiveProps(nextProps) {
+		this.selectPlaylist(nextProps.routeParams.playlistId)
 	}
 
 	componentDidMount() {
@@ -23,7 +23,7 @@ export default class Playlist extends React.Component {
       .then(res => res.data)
       .then(playlist => this.setState({playlist}));
   }
-	
+
 	render() {
 		let playlist = this.state.playlist;
 	return <div>
